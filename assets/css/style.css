@@ -1,0 +1,54 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    padding: 30px;
+}
+
+.main {
+    display: flex;
+    gap: 10px;
+}
+
+.form {
+    flex-basis: 30%;
+}
+
+.result {
+    flex: 1;
+}
+
+.song{
+    margin-bottom: 20px;
+}
+
+h1{
+    margin-bottom: 10px;
+}
+
+input{
+    margin-bottom: 10px;
+    padding: 10px;
+}
+button{
+    padding: 0 10px;
+}
+
+.result{
+    position: relative;
+    
+}
+
+.result .heading{
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.main-result{
+    display: flex;
+    gap: 20px;
+}

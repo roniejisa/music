@@ -4,19 +4,20 @@ const port = 3030;
 const { ZingMp3 } = require("zingmp3-api-full");
 const nct = require("./nct.js");
 const { getLyricNCT } = require("./getLyric.js");
-
+const path = require('path');
 app.get("/nct/song/:id", async (req, res) => {
     const { id } = req.params;
     const [responseSong, responseLyric] = await Promise.all([nct.getSong(id), nct.getLyric(id)]);
 
     let data = {};
-    if (responseSong.error === false) {
-        const { title, thumbnail, streamUrls } = responseSong.data.song;
+    if (responseSong.error === false && responseSong.data.song.streamUrls.length) {
+        const { title, thumbnail, streamUrls, artists } = responseSong.data.song;
         const { streamUrl: url } = streamUrls[0];
         data = {
             title,
             url,
             image: thumbnail,
+            author: artists.map(artist => artist.name).join(','),
             type: 'nct'
         }
     }
@@ -48,7 +49,8 @@ app.get("/nct/search/:keyword", async (req, res) => {
             return {
                 id: song.key,
                 title: song.title,
-                artists: song.artists,
+                image: song.thumbnail,
+                author: song.artists.map(artist => artist.name).join(', '),
                 type: 'nct'
             }
         });
@@ -83,10 +85,10 @@ app.get('/zing/song/:id', async (req, res) => {
     }
 
     if (responseInfo.msg === 'Success') {
-        const { title, artistsNames, thumbnail } = responseInfo.data;
+        const { title, artistsNames, thumbnailM } = responseInfo.data;
         data['title'] = title;
         data['author'] = artistsNames;
-        data['image'] = thumbnail;
+        data['image'] = thumbnailM;
     }
 
     if (responseLyric.msg === 'Success') {
@@ -123,6 +125,18 @@ app.get('/zing/search/:keyword', async (req, res) => {
         });
     }
 })
+
+app.get('/', function (req, res) {
+    res.sendFile(path.join(__dirname, '/index.html'));
+});
+
+app.get('/app.js', function (req, res) {
+    res.sendFile(path.join(__dirname, '/app.js'));
+});
+
+app.get('/assets/css/style.css', function (req, res) {
+    res.sendFile(path.join(__dirname, '/assets/css/style.css'));
+});
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

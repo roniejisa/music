@@ -5,13 +5,52 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="./assets/css/style.css">
     </head>
 
     <body>
-        <!-- <script src="./node_modules/"></script> -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha512/0.9.0/sha512.min.js"></script>
-        <script src="./test.js" type="module"></script>
+        <div class="main">
+            <div class="form">
+                <div class="song">
+                    <h1>Lấy thông tin bài hát</h1>
+                    <form action="" class="search-has-id">
+                        <div>
+                            <input type="text" value="ZUI7WC8F" placeholder="Nhập ID">
+                        </div>
+                        <select name="type">
+                            <option value="zing">Zing MP3</option>
+                            <option value="nct">Nhạc của tui</option>
+                        </select>
+                        <button type="submit">Lấy thông tin</button>
+                    </form>
+                </div>
+                <div class="search">
+                    <h1>Tìm bài hát</h1>
+                    <form action="" class="search">
+                        <div>
+                            <input type="text" value="MCK" placeholder="Nhập tên ca sĩ, bài hát,...">
+                        </div>
+                        <select name="type">
+                            <option value="zing">Zing MP3</option>
+                            <option value="nct">Nhạc của tui</option>
+                        </select>
+                        <button type="submit">Tìm kiếm</button>
+                    </form>
+                </div>
+            </div>
+            <div class="result">
+                <div class="heading">
+                    <div class="main-result">
+                        <h1>Kết quả</h1>
+                        <audio src="" controls></audio>
+                    </div>
+                    <button class="copy">Copy Data</button>
+                </div>
+                <pre class="content">
+                </pre>
+            </div>
+        </div>
+        <script src="./app.js"></script>
     </body>
 
 </html>
