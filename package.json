@@ -15,11 +15,12 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@vercel/node": "^3.0.22",
 		"express": "^4.18.3",
 		"lrc-parser": "^1.0.1",
 		"nhaccuatui-api-full": "^1.1.0",
-		"nodemon": "^3.1.0",
 		"zingmp3-api-full": "^1.0.14"
+	},
+	"devDependencies": {
+		"nodemon": "^3.1.0"
 	}
 }
