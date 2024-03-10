@@ -117,11 +117,11 @@ formSearch.addEventListener('submit', async function (e) {
         inputSearch.focus();
         return false;
     }
+    const response = await request.get(`${selectValue}/search/${value}`);
     const { data } = response.data;
     if (data.url) {
         audio.src = data.url;
     }
-    const response = await request.get(`${selectValue}/search/${value}`);
     contentResult.textContent = JSON.stringify(data, undefined, 2);
 })
 
