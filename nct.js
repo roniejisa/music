@@ -108,7 +108,6 @@ const getLyric = async (songId) => {
     // console.log(data);
     return data;
 }
-getLyric('f7XACmvhWloS');
 module.exports = {
     getSong,
     searchByKeyword,

@@ -7,23 +7,28 @@ const { getLyricNCT } = require("./getLyric.js");
 
 app.get("/nct/song/:id", async (req, res) => {
     const { id } = req.params;
-    const response = await nct.getSong(id);
-    if (response.error === false) {
-        const { title, thumbnail, streamUrls, key } = response.data.song
-        return res.json({
-            status: 200,
-            data: {
-                title,
-                streamUrls,
-                id: key,
-                image: thumbnail,
-                type: 'nct'
-            }
-        })
+    const [responseSong, responseLyric] = await Promise.all([nct.getSong(id), nct.getLyric(id)]);
+
+    let data = {};
+    if (responseSong.error === false) {
+        const { title, thumbnail, streamUrls } = responseSong.data.song;
+        const { streamUrl: url } = streamUrls[0];
+        data = {
+            title,
+            url,
+            image: thumbnail,
+            type: 'nct'
+        }
     }
+
+    if (responseLyric.error === false) {
+        let lyrics = await getLyricNCT(responseLyric.data.lyric.originalUrl);
+        data['lyrics'] = lyrics;
+    }
+
     return res.json({
-        status: 100,
-        data: {},
+        status: 200,
+        data: data,
     });
 });
 
@@ -60,22 +65,6 @@ app.get("/nct/search/:keyword", async (req, res) => {
     });
 });
 
-app.get("/nct/lyric/:id", async (req, res) => {
-    const { id } = req.params;
-    const response = await nct.getLyric(id);
-    if (response.error === false) {
-        let lyrics = await getLyricNCT(response.data.lyric.originalUrl);
-        return res.json({
-            status: 200,
-            data: lyrics,
-        });
-    }
-    return res.json({
-        status: 100,
-        data: {},
-    });
-});
-
 app.get('/zing/song/:id', async (req, res) => {
     const { id } = req.params;
     if (!id) {
@@ -84,35 +73,29 @@ app.get('/zing/song/:id', async (req, res) => {
             data: {}
         })
     }
-    let response = await ZingMp3.getInfoSong(id);
-    if (response.msg !== 'Success') {
-        console.log(response.dat.songs);
-        return false;
-    }
-    return res.json({
-        status: 100,
-        data: {}
-    })
-})
 
-app.get('/zing/lyric/:id', async (req, res) => {
-    const { id } = req.params;
-    if (!id) {
-        return res.json({
-            status: 100,
-            data: {}
-        })
+    let [responseSong, responseInfo, responseLyric] = await Promise.all([ZingMp3.getSong(id), ZingMp3.getInfoSong(id), ZingMp3.getLyric(id)]);
+
+    let data = {};
+
+    if (responseSong.msg === 'Success') {
+        data['url'] = responseSong.data['128'];
     }
-    let response = await ZingMp3.getLyric(id);
-    if (response.msg === 'Success') {
-        return res.json({
-            status: 200,
-            data: response.data.sentences
-        });
+
+    if (responseInfo.msg === 'Success') {
+        const { title, artistsNames, thumbnail } = responseInfo.data;
+        data['title'] = title;
+        data['author'] = artistsNames;
+        data['image'] = thumbnail;
     }
+
+    if (responseLyric.msg === 'Success') {
+        data['lyrics'] = responseLyric.data.sentences;
+    }
+
     return res.json({
-        status: 100,
-        data: {}
+        status: 200,
+        data
     })
 })
 
