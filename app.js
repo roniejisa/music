@@ -135,7 +135,6 @@ copyResult.addEventListener('click', function () {
     alert('Đã copy')
 })
 
-
 window.Clipboard = (function (window, document, navigator) {
     var textArea,
         copy;
