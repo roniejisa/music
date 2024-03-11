@@ -111,11 +111,11 @@ app.get('/zing/search/:keyword', async (req, res) => {
     }
     let response = await ZingMp3.search(keyword);
     if (response.msg === 'Success') {
-        let newData = response.data.songs.map(({ encodeId, title, thumbnail }) => {
+        let newData = response.data.songs.map(({ encodeId, title, thumbnailM }) => {
             return {
                 id: encodeId,
                 title,
-                image: thumbnail,
+                image: thumbnailM,
                 type: 'zing'
             }
         })
@@ -124,6 +124,28 @@ app.get('/zing/search/:keyword', async (req, res) => {
             data: newData
         });
     }
+})
+
+app.get('/topSong', async (req, res) => {
+    var response = await ZingMp3.getChartHome();
+    if (response.msg === 'Success') {
+        var newData = response.data.RTChart.items.map(({ encodeId, title, thumbnailM }) => {
+            return {
+                id: encodeId,
+                title,
+                image: thumbnailM,
+                type: 'zing'
+            }
+        })
+        return res.json({
+            status: 200,
+            data: newData
+        })
+    }
+    return res.json({
+        status: 100,
+        data: []
+    })
 })
 
 app.get('/', function (req, res) {
