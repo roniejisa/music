@@ -5,6 +5,14 @@ const { ZingMp3 } = require("zingmp3-api-full");
 const nct = require("./nct.js");
 const { getLyricNCT } = require("./getLyric.js");
 const path = require('path');
+
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    next();
+});
+
 app.get("/nct/song/:id", async (req, res) => {
     const { id } = req.params;
     const [responseSong, responseLyric] = await Promise.all([nct.getSong(id), nct.getLyric(id)]);
@@ -44,7 +52,8 @@ app.get("/nct/search/:keyword", async (req, res) => {
 
     const response = await nct.searchByKeyword(keyword);
 
-    if (response.error === false) {
+    if (response.error === false && response.data.search && response.data.search.song && response.data.search.song.song) {
+        
         let newData = response.data.search.song.song.map(song => {
             return {
                 id: song.key,
@@ -54,7 +63,6 @@ app.get("/nct/search/:keyword", async (req, res) => {
                 type: 'nct'
             }
         });
-
         return res.json({
             status: 200,
             data: newData
@@ -110,11 +118,12 @@ app.get('/zing/search/:keyword', async (req, res) => {
         })
     }
     let response = await ZingMp3.search(keyword);
-    if (response.msg === 'Success') {
-        let newData = response.data.songs.map(({ encodeId, title, thumbnailM }) => {
+    if (response.msg === 'Success' && response.data.songs) {
+        let newData = response.data.songs.map(({ encodeId, title, thumbnailM, artistsNames }) => {
             return {
                 id: encodeId,
                 title,
+                author:artistsNames,
                 image: thumbnailM,
                 type: 'zing'
             }
@@ -124,15 +133,20 @@ app.get('/zing/search/:keyword', async (req, res) => {
             data: newData
         });
     }
+    return res.json({
+        status: 100,
+        data: []
+    })
 })
 
 app.get('/topSong', async (req, res) => {
     var response = await ZingMp3.getChartHome();
     if (response.msg === 'Success') {
-        var newData = response.data.RTChart.items.map(({ encodeId, title, thumbnailM }) => {
+        var newData = response.data.RTChart.items.map(({ encodeId, title, thumbnailM, artistsNames }) => {
             return {
                 id: encodeId,
                 title,
+                author: artistsNames,
                 image: thumbnailM,
                 type: 'zing'
             }
