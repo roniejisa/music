@@ -1731,23 +1731,23 @@ function toLyricZingMP3(arr) {
     return lyrics.reduce(function (newArray, lyric, index) {
         var endTime = 0;
         if (!songCurrent.lyrics[index + 1] && lyric.words.trim() === '') {
-            endTime = +lyric.startTimeMs + 500;
+            endTime = +lyric.startTime + 500;
         } else {
-            endTime = (lyric.endTimeMs != 0 && lyric.endTimeMs) ? lyric.endTimeMs : songCurrent.lyrics[index + 1].startTimeMs
+            endTime = (lyric.endTime != 0 && lyric.endTime) ? lyric.endTime : songCurrent.lyrics[index + 1].startTime
         }
         var arrWords = lyric.words.split(' ');
 
         endTime -= (Math.floor(Math.random() * 1000 + 500))
         var words = [];
         var arrWords = lyric.words.split(' ');
-        var totalTime = endTime - +lyric.startTimeMs;
+        var totalTime = endTime - +lyric.startTime;
         var oneTime = totalTime / arrWords.length;
 
         for (var i = 0; i < arrWords.length; i++) {
             words.push({
                 data: arrWords[i],
-                startTime: i == 0 ? +lyric.startTimeMs : +lyric.startTimeMs + (oneTime * i),
-                endTime: +lyric.startTimeMs + (oneTime * (i + 1))
+                startTime: i == 0 ? +lyric.startTime : +lyric.startTime + (oneTime * i),
+                endTime: +lyric.startTime + (oneTime * (i + 1))
             })
         }
         newArray.push({
