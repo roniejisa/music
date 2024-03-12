@@ -39,7 +39,7 @@ app.get("/nct/song/:id", async (req, res) => {
         status: 200,
         data: data,
     });
-});
+});     
 
 app.get("/nct/search/:keyword", async (req, res) => {
     const { keyword } = req.params;

@@ -1716,7 +1716,7 @@ var getLyricNCT = async function (linkLRC) {
 };
 
 function toLyricZingMP3(arr) {
-    return arr.map(function (item) {
+    var lyrics = arr.map(function (item) {
         return {
             words: [
                 {
@@ -1727,6 +1727,34 @@ function toLyricZingMP3(arr) {
             ]
         };
     });
+
+    return lyrics.reduce(function (newArray, lyric, index) {
+        var endTime = 0;
+        if (!songCurrent.lyrics[index + 1] && lyric.words.trim() === '') {
+            endTime = +lyric.startTimeMs + 500;
+        } else {
+            endTime = (lyric.endTimeMs != 0 && lyric.endTimeMs) ? lyric.endTimeMs : songCurrent.lyrics[index + 1].startTimeMs
+        }
+        var arrWords = lyric.words.split(' ');
+
+        endTime -= (Math.floor(Math.random() * 1000 + 500))
+        var words = [];
+        var arrWords = lyric.words.split(' ');
+        var totalTime = endTime - +lyric.startTimeMs;
+        var oneTime = totalTime / arrWords.length;
+
+        for (var i = 0; i < arrWords.length; i++) {
+            words.push({
+                data: arrWords[i],
+                startTime: i == 0 ? +lyric.startTimeMs : +lyric.startTimeMs + (oneTime * i),
+                endTime: +lyric.startTimeMs + (oneTime * (i + 1))
+            })
+        }
+        newArray.push({
+            words
+        });
+        return newArray;
+    }, []);
 }
 //Cách lấy nhạc 320kb trên nhạc của tui
 // Vào request tìm link: https://www.nhaccuatui.com/flash/xml?html5=true
