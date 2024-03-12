@@ -1730,24 +1730,23 @@ function toLyricZingMP3(arr) {
 
     return lyrics.reduce(function (newArray, lyric, index) {
         var endTime = 0;
-        if (!songCurrent.lyrics[index + 1] && lyric.words.trim() === '') {
-            endTime = +lyric.startTime + 500;
+        if (lyrics[index + 1] && lyric.words[lyric.words.length - 1].data.trim() === '') {
+            endTime = +lyric.words[lyric.words.length - 1].startTime + 500;
         } else {
-            endTime = (lyric.endTime != 0 && lyric.endTime) ? lyric.endTime : songCurrent.lyrics[index + 1].startTime
+            endTime = (lyric.words[0].endTime != 0 && lyric.words[0].endTime) ? lyric.words[0].endTime : lyrics[0].startTime
         }
-        var arrWords = lyric.words.split(' ');
 
         endTime -= (Math.floor(Math.random() * 1000 + 500))
         var words = [];
-        var arrWords = lyric.words.split(' ');
-        var totalTime = endTime - +lyric.startTime;
+        var arrWords = lyric.words[0].data.split(' ');
+        var totalTime = endTime - +lyric.words[0].startTime;
         var oneTime = totalTime / arrWords.length;
 
         for (var i = 0; i < arrWords.length; i++) {
             words.push({
                 data: arrWords[i],
-                startTime: i == 0 ? +lyric.startTime : +lyric.startTime + (oneTime * i),
-                endTime: +lyric.startTime + (oneTime * (i + 1))
+                startTime: i == 0 ? +lyric.words[0].startTime : +lyric.words[0].startTime + (oneTime * i),
+                endTime: +lyric.words[0].startTime + (oneTime * (i + 1))
             })
         }
         newArray.push({
