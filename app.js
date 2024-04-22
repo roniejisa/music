@@ -99,6 +99,7 @@ formSong.addEventListener('submit', async function (e) {
         inputSong.focus();
         return false;
     }
+    contentResult.textContent = "Đang lấy thông tin";
     const response = await request.get(`${selectValue}/song/${value}`);
     const { data } = response.data;
     if (data.url) {
@@ -117,6 +118,7 @@ formSearch.addEventListener('submit', async function (e) {
         inputSearch.focus();
         return false;
     }
+    contentResult.textContent = "Đang lấy thông tin";
     const response = await request.get(`${selectValue}/search/${value}`);
     const { data } = response.data;
     if (data.url) {
